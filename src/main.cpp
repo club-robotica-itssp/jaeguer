@@ -19,16 +19,36 @@
   08/03/2018
 */
 
+/*
+  Mapa de pines.
+
+   Pines del aruduino
+   0 1 2 3 4 5 6 7 8 9 10 11 12 13 A0 A1 A2 A3 A4 A5
+   B B U S U H H H H H H  Z
+
+   B - Usados en modulo bluetooth.
+   U - Usados en el sensor ultrasonico hcsr04.
+   S - Usados en servomotor.
+   H - Usados en puente h keyes kl298.
+   Z - Usados en el buzze.
+*/
+
 // Librerias
 #include <Arduino.h> // Arduino.
+#include <Servo.h>// 883
 #include "kl298.h"
 #include "hcsr04.h" // (tr, echo)
 
-// Descomentar para depuración por puerto serial.
-#define DEPURACION
-#define BAUDRATE 9600
+// Configuración.
+#define POSICION_CENTRAL_USERVO 75 // Posición que adquirira el servo al inciar.
+#define MIN_USERVO 0
+#define MAX_USERVO 170
 
 // Definiciones.
+// Pin para buzzer.
+#define BUZZER 11
+// Pin para servomotor.
+#define SERVO 3
 // Pines sensor ultrasonico.
 #define TRIGGER 2
 #define ECHO    4
@@ -40,26 +60,68 @@
 #define IN_3  8
 #define IN_4  7
 #define VELOCIDAD 255
+// Renombrando Serial a bluetooth
+#define BT  Serial
+#define BAUDRATE 9600
 
-// Pines del aruduino  //
-// 0 1 2 3 4 5 6 7 8 9 10 11 12 13
-// B B U S U H H H H H H
-// A0 A1 A2 A3 A4 A5 //
-//
-//////////////////////
+// Variables.
+char dato = 'N';
 
+// Instanciaciones.
 kl298 jaeguer(EN_A, EN_B, IN_1, IN_2, IN_3, IN_4, VELOCIDAD);
-hcsr04 ulstrasonico(TRIGGER, ECHO);
+hcsr04 distancia(TRIGGER, ECHO);
+Servo uServo;
 
 void setup() {
-  #ifdef DEPURACION
-    Serial.begin(BAUDRATE);
-  #endif
+  // Inicializando comunicación serial con bluetooth.
+  BT.begin(BAUDRATE);
+
+  // Pin de salida para buzzer.
+  pinMode(BUZZER, OUTPUT);
+  pinMode(13, OUTPUT);
+
+  // Inicializando servo en pin correspondiente.
+  uServo.attach(SERVO);
+
+  // Posicionanado servo en la posición central.
+  for (int i = uServo.read(); i >= POSICION_CENTRAL_USERVO; i--) {
+    uServo.write(i);
+    delay(50);
+  }
 }
 
 void loop() {
-  #ifdef DEPURACION
-    Serial.println(ulstrasonico.getDist());
-    delay(1000);
-  #endif
+  if (BT.available()) {
+    dato = BT.read();
+  }
+
+  switch (dato) {
+    case 'A':
+      digitalWrite(BUZZER, HIGH);
+      break;
+    case 'a':
+      digitalWrite(BUZZER, LOW);
+      break;
+    case 'P':
+      digitalWrite(13, HIGH);
+      break;
+    case 'p':
+      digitalWrite(13, LOW);
+      break;
+    case 'F':
+      jaeguer.adelante();
+      break;
+    case 'B':
+      jaeguer.atras();
+      break;
+    case 'R':
+      jaeguer.giroIzquierda();
+      break;
+    case 'L':
+      jaeguer.giroDerecha();
+      break;
+    case 'S':
+      jaeguer.alto();
+      break;
+  }
 }
