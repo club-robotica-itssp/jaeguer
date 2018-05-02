@@ -36,6 +36,7 @@
 // Librerias
 #include <Arduino.h> // Arduino.
 #include <Servo.h>// 883
+#include <Adafruit_SSD1306.h>   // OLED
 #include "kl298.h"
 #include "hcsr04.h" // (tr, echo)
 
@@ -45,6 +46,8 @@
 #define MAX_USERVO 170
 
 // Definiciones.
+// Oled reset.
+#define OLED_RESET  4
 // Pin para buzzer.
 #define BUZZER 11
 // Pin para servomotor.
@@ -64,64 +67,192 @@
 #define BT  Serial
 #define BAUDRATE 9600
 
+// Prototipos.
+void DrawTitles(int posicion_y, String int_o_ext);
+
 // Variables.
 char dato = 'N';
+int vLect1=0;
+int vLect2=0;
+int vLect3=0;
+int velocidad;
+int cont = 1;
 
 // Instanciaciones.
 kl298 jaeguer(EN_A, EN_B, IN_1, IN_2, IN_3, IN_4, VELOCIDAD);
 hcsr04 distancia(TRIGGER, ECHO);
+Adafruit_SSD1306 Display(OLED_RESET);  // pantalla
 Servo uServo;
 
 void setup() {
+  // Pantalla oled
+  Display.begin(SSD1306_SWITCHCAPVCC, 0x3C); // Inicializando la dirección i2c para la pantalla oled.
+  Display.clearDisplay();// Limpiando pantall antes.
+  Display.display();
+  delay (1000);
+  // Mensaje iniciando.
+  Display.setTextSize(2);
+  Display.setTextColor(WHITE);
+  Display.setCursor(0, 0);
+  Display.print("I");
+  Display.display();
+  Display.print("n");
+  Display.display();
+  Display.print("i");
+  Display.display();
+  Display.print("c");
+  Display.display();
+  Display.print("i");
+  Display.display();
+  Display.print("a");
+  Display.display();
+  Display.print("n");
+  Display.display();
+  Display.print("d");
+  Display.display();
+  Display.print("o");
+  Display.display();
+  Display.fillRect(110, 0, 2, 14, WHITE);
+  Display.display();
+  delay(200);
+  Display.fillRect(110, 0, 2, 14, BLACK);
+  Display.display();
+  delay(200);
+  Display.fillRect(110, 0, 2, 14, WHITE);
+  Display.display();
+  delay(200);
+  Display.fillRect(110, 0, 2, 14, BLACK);
+  Display.display();
+  delay(200);
+  Display.fillRect(110, 0, 2, 14, WHITE);
+  Display.display();
+  delay(200);
+  Display.fillRect(110, 0, 2, 14, BLACK);
+  Display.display();
+  delay(200);
+
+
+
   // Inicializando comunicación serial con bluetooth.
+  Display.setTextSize(1);
+  Display.setTextColor(WHITE);
+  Display.setCursor(0, 20);
+  Display.println("Abriendo SP: ");
+  Display.display();
+
   BT.begin(BAUDRATE);
+  delay(200);
+
+  Display.setTextSize(1);
+  Display.setTextColor(WHITE);
+  Display.setCursor(75, 20);
+  Display.println("Hecho");
+  Display.display();
+  delay(100);
 
   // Pin de salida para buzzer.
+  Display.setTextSize(1);
+  Display.setTextColor(WHITE);
+  Display.setCursor(0, 30);
+  Display.println("Config  E/S: ");
+  Display.display();
+
   pinMode(BUZZER, OUTPUT);
   pinMode(13, OUTPUT);
+  delay(200);
+
+  Display.setTextSize(1);
+  Display.setTextColor(WHITE);
+  Display.setCursor(75, 30);
+  Display.println("Hecho");
+  Display.display();
+  delay(100);
 
   // Inicializando servo en pin correspondiente.
+  Display.setTextSize(1);
+  Display.setTextColor(WHITE);
+  Display.setCursor(0, 40);
+  Display.println("Arranca  SM: ");
+  Display.display();
+
   uServo.attach(SERVO);
+  delay(200);
+
+  Display.setTextSize(1);
+  Display.setTextColor(WHITE);
+  Display.setCursor(75, 40);
+  Display.println("Hecho");
+  Display.display();
+  delay(100);
 
   // Posicionanado servo en la posición central.
+  Display.setTextSize(1);
+  Display.setTextColor(WHITE);
+  Display.setCursor(0, 50);
+  Display.println("Centrand SM: ");
+  Display.display();
+
+  int cnt = 0; // Contador para display.
   for (int i = uServo.read(); i >= POSICION_CENTRAL_USERVO; i--) {
+
+    Display.setCursor(75+(cnt), 50);
+    Display.println("-");
+    Display.display();
+
     uServo.write(i);
-    delay(50);
+    delay(70);
+    cnt++;
   }
+  Display.display();
+  Display.fillRect(75, 50, 150, 7, BLACK);
+  Display.display();
+  delay(200);
+  Display.setTextSize(1);
+  Display.setTextColor(WHITE);
+  Display.setCursor(75, 50);
+  Display.println("Hecho");
+  Display.display();
+  Display.fillRect(105, 50, 1, 7, WHITE);
+  Display.display();
+  delay(200);
+  Display.fillRect(105, 50, 1, 7, BLACK);
+  Display.display();
+  delay(200);
+  Display.fillRect(105, 50, 1, 7, WHITE);
+  Display.display();
+  delay(200);
+  Display.fillRect(105, 50, 1, 7, BLACK);
+  Display.display();
+  delay(200);
+  Display.fillRect(105, 50, 1, 7, WHITE);
+  Display.display();
+  delay(200);
+  Display.fillRect(105, 50, 1, 7, BLACK);
+  Display.display();
+  delay(200);
+  Display.fillRect(105, 50, 1, 7, WHITE);
+  Display.display();
+  delay(200);
+  Display.fillRect(105, 50, 1, 7, BLACK);
+  Display.display();
+  delay(200);
+
+  Display.clearDisplay();// Limpiando pantalla
+  Display.display();
 }
 
 void loop() {
+
   if (BT.available()) {
     dato = BT.read();
   }
 
   switch (dato) {
-    case 'A':
+    case 'R':
       digitalWrite(BUZZER, HIGH);
       break;
-    case 'a':
+    case 'r':
       digitalWrite(BUZZER, LOW);
-      break;
-    case 'P':
-      digitalWrite(13, HIGH);
-      break;
-    case 'p':
-      digitalWrite(13, LOW);
-      break;
-    case 'F':
-      jaeguer.adelante();
-      break;
-    case 'B':
-      jaeguer.atras();
-      break;
-    case 'R':
-      jaeguer.giroIzquierda();
-      break;
-    case 'L':
-      jaeguer.giroDerecha();
-      break;
-    case 'S':
-      jaeguer.alto();
       break;
   }
 }
