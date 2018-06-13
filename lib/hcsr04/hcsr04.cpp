@@ -10,33 +10,37 @@
 
 // Constructor, pines de conexion
 hcsr04::hcsr04(int tr, int ec) {
-	trig = tr;
-	echo = ec;
+	TRIG = tr;
+	ECHO = ec;
 
-	pinMode(trig, OUTPUT);
-	pinMode(echo, INPUT);
-}
+	Serial.println("INICIO");
 
-void hcsr04::calcDist() {
-	long time; // Para guardar el tiempo de viaje del ultrasonido.
-
-	// Preparando el sensor.
-	digitalWrite(trig, LOW);
-	delayMicroseconds(2);
-
-	// Poniendo en alto trigger para iniciar la medicion con el sensor.
-	digitalWrite(trig, HIGH);
-	delayMicroseconds(10);
-	digitalWrite(trig, LOW);
-
-	// Leyento el tiempo en que el sonido tardda en regresar.
-	time = pulseIn(echo, HIGH);
-
-	// Calculando la distancia.
-	dist = time*0.034/2;
+	pinMode(TRIG, OUTPUT);
+	pinMode(ECHO, INPUT);
 }
 
 int hcsr04::getDist() {
-	calcDist();
-	return dist;
+  long duration;
+  int distance;
+
+  // Asegurando estado bajo en TRIG.
+  digitalWrite(TRIG, LOW);
+  delayMicroseconds(2);
+
+  // Poniendo en alto la terminal TRIG por 10 microsegundos.
+  digitalWrite(TRIG, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG, LOW);
+
+  // Obteniendo y almacenando el tiempo en el que ECHO conmuta de estado.
+  duration = pulseIn(ECHO, HIGH);
+  // Calculando distancia utilizando la velocidad del sonido (343m/s)
+  // y dividiendo entre 2.
+  distance= duration*0.034/2;
+
+	Serial.println("CALCULAND");
+	Serial.println(duration);
+	Serial.println(distance);
+
+  return distance;
 }

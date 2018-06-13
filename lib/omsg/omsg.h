@@ -27,6 +27,14 @@ public:
   void corazon();
   void dtBmsg();
   void flechaA();
+  void drawInterfaz();
+  void cls_header();
+  void cls_body();
+  void modoRemotoBT();
+  void modoAutoBT();
+  void modoAuto();
+  void ready();
+  void selectMode();
 };
 
 #endif

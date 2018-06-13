@@ -33,12 +33,12 @@ public:
   kl298(int, int , int , int, int, int, int);
   void adelante();
   void atras();
-  void giroIzquierda(); // TODO : Eliminar y reemplazar con rotar izquierda
-  void giroDerecha(); // TODO : Eliminar y reemplzar con rotar derecha
-  void giroMedioIzquierda(); // TODO : Eliminar y reemplazar con adelante izquierda
-  void giroMedioDerecha(); // TODO : Eliminar y reemplzar con adelante derecha
-                          // TODO : Agregar atraz izquierda.
-                          // TODO : Agregar atraz derecha.
+  void rotarIzquierda();
+  void rotarDerecha();
+  void adelanteIzquierda();
+  void adelanteDerecha();
+  void atrasIzquierda();
+  void atrasDerecha();
   void alto();
   void setVelocidad(int);
 };

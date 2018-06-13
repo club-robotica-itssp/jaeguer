@@ -19,13 +19,11 @@
 
 class hcsr04 {
 	private:
-		int trig;
-		int echo;
-		int dist;
-		void calcDist();
+		int TRIG;
+		int ECHO;
 	public:
 		hcsr04(int, int);
-		int getDist();
+    int getDist();
 };
 
 #endif

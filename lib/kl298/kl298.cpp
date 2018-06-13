@@ -48,7 +48,7 @@ void kl298::atras() {
   analogWrite(_pinENB, _velocidad);
 }
 
-void kl298::giroIzquierda() {
+void kl298::rotarIzquierda() {
   digitalWrite(_pinIN1, HIGH);
   digitalWrite(_pinIN2, LOW);
   digitalWrite(_pinIN3, LOW);
@@ -58,7 +58,7 @@ void kl298::giroIzquierda() {
   analogWrite(_pinENB, _velocidad);
 }
 
-void kl298::giroDerecha() {
+void kl298::rotarDerecha() {
   digitalWrite(_pinIN1, LOW);
   digitalWrite(_pinIN2, HIGH);
   digitalWrite(_pinIN3, HIGH);
@@ -68,22 +68,44 @@ void kl298::giroDerecha() {
   analogWrite(_pinENB, _velocidad);
 }
 
-void kl298::giroMedioIzquierda() {
+void kl298::adelanteIzquierda() {
   digitalWrite(_pinIN1, HIGH);
   digitalWrite(_pinIN2, LOW);
   digitalWrite(_pinIN3, LOW);
   digitalWrite(_pinIN4, LOW);
 
+  analogWrite(_pinENA, _velocidad);
   analogWrite(_pinENB, _velocidad);
 }
 
-void kl298::giroMedioDerecha() {
+void kl298::adelanteDerecha() {
   digitalWrite(_pinIN1, LOW);
   digitalWrite(_pinIN2, LOW);
   digitalWrite(_pinIN3, HIGH);
   digitalWrite(_pinIN4, LOW);
 
   analogWrite(_pinENA, _velocidad);
+  analogWrite(_pinENB, _velocidad);
+}
+
+void kl298::atrasDerecha() {
+  digitalWrite(_pinIN1, LOW);
+  digitalWrite(_pinIN2, LOW);
+  digitalWrite(_pinIN3, LOW);
+  digitalWrite(_pinIN4, HIGH);
+
+  analogWrite(_pinENA, _velocidad);
+  analogWrite(_pinENB, _velocidad);
+}
+
+void kl298::atrasIzquierda() {
+  digitalWrite(_pinIN1, LOW);
+  digitalWrite(_pinIN2, HIGH);
+  digitalWrite(_pinIN3, LOW);
+  digitalWrite(_pinIN4, LOW);
+
+  analogWrite(_pinENA, _velocidad);
+  analogWrite(_pinENB, _velocidad);
 }
 
 void kl298::alto() {

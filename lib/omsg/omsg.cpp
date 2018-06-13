@@ -204,3 +204,69 @@ void omsg::dtBmsg() {
    Display.drawBitmap(32, 0,FLECHA_ATRAS , 128, 64, 1);
    Display.display();
  }
+
+ void omsg::drawInterfaz() {
+   for (int i = 0; i < 160; i += 20) {
+     // Horizontales.
+     Display.fillRect(0, 1, i, 1, WHITE);
+     Display.fillRect(0, 19, i, 1, WHITE);
+     Display.fillRect(0, 63, i, 1, WHITE);
+
+     // Verticales
+     Display.fillRect(0, 1, 1, i, WHITE);
+     Display.fillRect(127, 1, 1, i, WHITE);
+
+     Display.display();
+   }
+
+ }
+
+void omsg::cls_header() {
+  Display.fillRect(10, 2, 100, 15, BLACK);
+  Display.display();
+}
+
+void omsg::cls_body(){
+  Display.fillRect(1, 20, 126, 43, BLACK);
+  Display.display();
+}
+
+ void omsg::modoRemotoBT() {
+   Display.setTextSize(2);
+   Display.setTextColor(WHITE);
+   Display.setCursor(27, 3);
+   Display.println("BT MODE");
+   Display.display();
+ }
+
+ void omsg::modoAutoBT() {
+   Display.setTextSize(2);
+   Display.setTextColor(WHITE);
+   Display.setCursor(7, 3);
+   Display.println(" BT AUTO");
+   Display.display();
+ }
+
+ void omsg::modoAuto() {
+   Display.setTextSize(2);
+   Display.setTextColor(WHITE);
+   Display.setCursor(7, 3);
+   Display.println("   AUTO");
+   Display.display();
+ }
+
+ void omsg::ready() {
+   Display.setTextSize(2);
+   Display.setTextColor(WHITE);
+   Display.setCursor(7, 3);
+   Display.println("  READY");
+   Display.display();
+ }
+
+ void omsg::selectMode() {
+   Display.setTextSize(2);
+   Display.setTextColor(WHITE);
+   Display.setCursor(3, 21);
+   Display.println("Enter mode");
+   Display.display();
+ }

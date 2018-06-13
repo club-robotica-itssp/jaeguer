@@ -60,6 +60,7 @@
 #define IN_2  9
 #define IN_3  8
 #define IN_4  7
+//#define VELOCIDAD 255
 #define VELOCIDAD 255
 // Renombrando Serial a bluetooth
 #define BT  Serial
@@ -68,11 +69,13 @@
 // Prototipos.
 
 // Variables.
-char dato = 'N';
+char dato = 'S';
+char mode = 'B';
 int vLect1=0;
 int vLect2=0;
 int vLect3=0;
 int velocidad;
+int dist;
 int cont = 1;
 
 // Instanciaciones.
@@ -94,7 +97,6 @@ void setup() {
   // Inicializando comunicación serial con bluetooth.
   msg.iniSp();
   BT.begin(BAUDRATE);
-  BT.println("Hola");
   msg.hecho(20);
 
   // Pin de salida para buzzer.
@@ -121,21 +123,121 @@ void setup() {
   msg.cls();
   msg.corazon();
   msg.cls();
+  msg.drawInterfaz();
 
+  //msg.modoRemotoBT();
+  msg.ready();
+  delay(250);
+  msg.cls_header();
 }
 
 void loop() {
+  // Revisando datos para selección de modo.
   if (BT.available()) {
-    dato = BT.read();
+    mode = BT.read();
   }
 
-  switch (dato) {
-    case 'R':
-      digitalWrite(BUZZER, HIGH);
-      msg.dtBmsg();
+  // Selección de modos.
+  switch (mode) {
+    case 'B':
+      while (mode == 'B') {
+        msg.modoAuto();
+        msg.cls_body();
+
+        if (BT.available()) {
+          dato = BT.read();
+        }
+        switch (dato) {
+          case 'V':
+            while (dato == 'V') {
+              msg.selectMode();
+              if (BT.available()) {
+                mode = BT.read();
+                msg.cls_header();
+                dato = 'S';
+              }
+            }
+        }
+
+        //TODO CODIGO AQUI
+        Serial.println(distancia.getDist());
+      }
       break;
-    case 'r':
-      digitalWrite(BUZZER, LOW);
+    case 'N':
+      while (mode == 'N') {
+        msg.modoAutoBT();
+        msg.cls_body();
+
+        if (BT.available()) {
+          dato = BT.read();
+        }
+        switch (dato) {
+          case 'V':
+            while (dato == 'V') {
+              msg.selectMode();
+              if (BT.available()) {
+                mode = BT.read();
+                msg.cls_header();
+                dato = 'S';
+              }
+            }
+        }
+      }
       break;
+    case 'M':
+      while (mode == 'M') {
+        msg.modoRemotoBT();
+        msg.cls_body();
+
+        if (BT.available()) {
+          dato = BT.read();
+        }
+        switch (dato) {
+          case 'V':
+            while (dato == 'V') {
+              msg.selectMode();
+              if (BT.available()) {
+                mode = BT.read();
+                msg.cls_header();
+                dato = 'S';
+              }
+            }
+            break;
+          case 'W':
+            jaeguer.adelante();
+            break;
+          case 'X':
+            jaeguer.atras();
+            break;
+          case 'A':
+            jaeguer.rotarIzquierda();
+            break;
+          case 'D':
+            jaeguer.rotarDerecha();
+            break;
+          case 'Q':
+            jaeguer.adelanteIzquierda();
+            break;
+          case 'E':
+            jaeguer.adelanteDerecha();
+            break;
+          case 'C':
+            jaeguer.atrasDerecha();
+            break;
+          case 'Z':
+            jaeguer.atrasIzquierda();
+            break;
+          case 'S':
+            jaeguer.alto();
+            break;
+          case 'P':
+            digitalWrite(BUZZER, HIGH);
+            msg.dtBmsg();
+            break;
+          case 'p':
+            digitalWrite(BUZZER, LOW);
+            break;
+        }
+    }
   }
 }
